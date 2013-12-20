@@ -44,4 +44,17 @@ module.directive('ngOn', function() {
   };
 });
 
+module.factory('$emit', ['$rootScope', function($rootScope) {
+  return function() {
+    $rootScope.$emit.apply($rootScope, arguments);
+  }
+}]);
+
+module.factory('$on', ['$rootScope', function($rootScope) {
+  return function() {
+    $rootScope.$on.apply($rootScope, arguments);
+  }
+}]);
+
+
 }(angular.module('angular-event-emitter', []), angular))
