@@ -17,4 +17,19 @@ module.config(['$provide', function($provide) {
     return $delegate;
   }]);
 }]);
+
+module.directive('ngChannel', ['$rootScope', function($rootScope) {
+  return {
+    scope: {
+        ngEmit: '='
+    },
+    link: function(scope, element, attrs, ngModel) {
+      var _event = attrs.ngChannel.split(':')[0]
+      element.bind(_event, function() {
+        $rootScope.$emit('event:'+attrs.ngChannel, scope.ngEmit || attrs.ngEmit);
+      });
+
+    }
+  };
+}]);
 }(angular.module('angular-event-emitter', []), angular))
