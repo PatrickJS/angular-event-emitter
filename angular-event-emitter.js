@@ -1,6 +1,8 @@
 ;(function(module, angular, undefined) {
 'use strict';
 
+angular.module('ngEventEmitter', ['angular-event-emitter']);
+
 module.config(['$provide', function($provide) {
   $provide.decorator('$rootScope', ['$delegate', function($delegate) {
 
