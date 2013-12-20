@@ -4,6 +4,7 @@
 angular.module('ngEventEmitter', ['angular-event-emitter']);
 
 module.config(['$provide', function($provide) {
+
   $provide.decorator('$rootScope', ['$delegate', function($delegate) {
 
     Object.defineProperty($delegate.constructor.prototype, '$onRootScope', {
@@ -16,6 +17,8 @@ module.config(['$provide', function($provide) {
 
     return $delegate;
   }]);
+
+
 }]);
 
 module.directive('ngChannel', ['$rootScope', function($rootScope) {
