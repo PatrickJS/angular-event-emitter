@@ -32,4 +32,16 @@ module.directive('ngChannel', ['$rootScope', function($rootScope) {
     }
   };
 }]);
+
+module.directive('ngOn', function() {
+  return {
+    link: function(scope, element, attrs, ngModel) {
+        var toggle = true;
+        scope.$onRootScope('event:'+attrs.ngOn, function(event, callback) {
+          scope[attrs.ngExecute].apply(this, arguments);
+        });
+    }
+  };
+});
+
 }(angular.module('angular-event-emitter', []), angular))
