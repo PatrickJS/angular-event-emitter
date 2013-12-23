@@ -19,6 +19,23 @@
   }]);
 
 
+  ngDirectives.directive('ngChannel', ['$rootScope', function($rootScope) {
+    function linker(scope, element, attrs, ngModel) {
+      var _event = attrs.ngChannel.split(':')[0];
+      // var _event = scope.$eval(attrs.ngChannel);
+      // console.log(_event)
+      element.bind(_event, function(event) {
+        var arg = (scope.ngEmit !== undefined) ? scope.ngEmit : attrs.ngEmit;
+        $rootScope.$emit.call($rootScope, 'event:'+attrs.ngChannel, arg);
+      });
+    }
+    return {
+      scope: {
+          ngEmit: '='
+      },
+      link: linker
+    };
+  }]);
 
   ngDirectives.directive('ngOn', ['$parse', '$rootScope', function($parse, $rootScope) {
     function linker(scope, element, attrs, ngModel) {
