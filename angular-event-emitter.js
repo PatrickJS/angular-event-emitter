@@ -23,20 +23,24 @@ module.config(['$provide', function($provide) {
 
 }]);
 
-module.directive('ngChannel', ['$rootScope', function($rootScope) {
-  return {
-    scope: {
-        ngEmit: '='
-    },
-    link: function(scope, element, attrs, ngModel) {
-      var _event = attrs.ngChannel.split(':')[0]
-      element.bind(_event, function() {
-        $rootScope.$emit('event:'+attrs.ngChannel, scope.ngEmit || attrs.ngEmit);
+  ngDirectives.directive('ngOn', ['$parse', '$rootScope', function($parse, $rootScope) {
+    function linker(scope, element, attrs, ngModel) {
+      var removeListener = $rootScope.$on('event:'+attrs.ngOn, function(event, args) {
+        var callback = $parse(attrs.ngExecute)(scope);
+        callback.apply(scope, arguments);
       });
-
+      scope.$on('$destory', removeListener);
     }
-  };
-}]);
+    return {
+      link: linker
+    };
+  }]);
+
+  ngServices.factory('$emit', ['$rootScope', function($rootScope) {
+    return function(args) {
+      $rootScope.$emit.apply($rootScope, arguments);
+    }
+  }]);
 
 module.directive('ngOn', function() {
   return {
