@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title></title>
+  <title>Example Emit app</title>
 </head>
 <body ng-app="emitApp">
+
   <div ng-controller="MainController">
     <div ng-repeat="toggle in toggles">
-        <input type="button" ng-channel="click:{{ 'channel'+$index }}" ng-emit="triggerArgs" value="Toggle {{ toggle }}" />
+        <input type="button" ng-channel="click:{{ 'channel'+$index }}" ng-emit="$index" value="Toggle {{ toggle }}" />
     </div>
 
     <div class="div1 slide-left" ng-on="click:{{ 'channel'+$index }}" ng-execute="callback" ng-show="toggle" ng-repeat="toggle in toggles">
@@ -15,56 +16,68 @@
   </div>
 
 
-
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular-animate.js"></script>
+  <script src="../angular-event-emitter.js"></script>
   <script type="text/javascript">
-  ;(function(app, angular) {
+  !function(app, angular) {
   'use strict';
+  Error.stackTraceLimit = Infinity;
 
 
-    app.controller('MainController', function($scope) {
+    app.controller('MainController', function($scope, $once, $on, $emit) {
+        $once('event', function(event, args) {
+          console.log('$once ', args);
+        });
+        $on('event', function(event, args) {
+          console.log('$on', args);
+        });
+
         $scope.toggle = true;
         $scope.toggles = [1,2,3]; // should be names
     //    $scope.triggerArgs = function() {};
         $scope.callback = function(value) {
-            console.log(arguments);
+          $emit('event', 'trigger event');
+          console.log(arguments);
         };
     });
 
-    app.directive('ngChannel', function() {
-        return {
-            scope: {
-                ngEmit: '='
-            },
-            link: function(scope, elem, attrs) {
-                var _event = attrs.ngChannel.split(':')[0]
-                elem.bind(_event, function() {
-                    // checks if the argument is located on the local scope before converting it into a string
-                    scope.$root.$emit('event:'+attrs.ngChannel, scope.ngEmit || attrs.ngEmit);
-                });
+    // app.directive('ngChannel', function($rootScope) {
+    //     function linker(scope, element, attrs) {
+    //       var _event = attrs.ngChannel.split(':')[0]
+    //       element.bind(_event, function() {
+    //         // checks if the argument is located on the local scope before converting it into a string
+    //         var arg = (scope.ngEmit !== undefined) ? scope.ngEmit : attrs.ngEmit;
+    //         $rootScope.$emit.call('event:'+attrs.ngChannel, arg);
+    //       });
+    //     }
+    //     return {
+    //         scope: {
+    //             ngEmit: '='
+    //         },
+    //         link: linker
+    //     };
+    // });
 
-            }
-        };
-    });
 
+    // app.directive('ngOn', function($animate, $parse, $rootScope) {
+    //   function linker(scope, element, attrs) {
+    //     var removeListener = $rootScope.$on('event:'+attrs.ngOn, function(event, args) {
+    //       // element.slideToggle();
+    //       var callback = $parse(attrs.ngExecute)(scope);
+    //       callback.apply(this, arguments);
+    //       // scope[attrs.ngExecute].apply(this, arguments);
+    //     });
 
-    app.directive('ngOn', function($animate, $interpolate, $parse) {
-        return {
-            link: function(scope, elem, attrs) {
-                var toggle = true;
-                var removeListener = scope.$root.$on('event:'+attrs.ngOn, function(event, arg) {
-                    // elem.slideToggle();
-                    var callback = $parse(attrs.ngExecute)(scope)
-                    callback.apply(this, arguments)
-    //                $interpolate(attrs.ngExecute);
-    //                scope[attrs.ngExecute].apply(this, arguments);
-                });
-                // remove listener when the scope is destoryed
-                scope.$on('$destory', removeListener);
-            }
-        };
-    });
+    //     // remove listener when the scope is destoryed
+    //     scope.$on('$destory', removeListener);
+    //   }
+    //   return {
+    //     link: linker
+    //   };
+    // });
 
-  }(angular.module('emitApp', []), angular));
+  }(angular.module('emitApp', ['ngEventEmitter']), angular);
 
   </script>
 </body>
