@@ -1,5 +1,7 @@
-;(function(module, angular, undefined) {
-'use strict';
+!function(angular, undefined) { 'use strict';
+  var ngDecorators = angular.module('ngEventEmitter.decorators', []);
+  var ngDirectives = angular.module('ngEventEmitter.directives', []);
+  var ngServices = angular.module('ngEventEmitter.services', []);
 
 angular.module('ngEventEmitter', ['angular-event-emitter']);
 
@@ -53,11 +55,12 @@ module.factory('$emit', ['$rootScope', function($rootScope) {
   }
 }]);
 
-module.factory('$on', ['$rootScope', function($rootScope) {
-  return function() {
-    $rootScope.$on.apply($rootScope, arguments);
-  }
-}]);
+  angular.module('ngEventEmitter', [
+    'ngEventEmitter.decorators',
+    'ngEventEmitter.directives',
+    'ngEventEmitter.services'
+  ]);
 
+  angular.module('angular-event-emitter', ['ngEventEmitter']);
 
-}(angular.module('angular-event-emitter', []), angular))
+}(window.angular);
