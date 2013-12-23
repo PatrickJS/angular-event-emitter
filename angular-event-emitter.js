@@ -62,11 +62,18 @@
     }
   }]);
 
-module.factory('$emit', ['$rootScope', function($rootScope) {
-  return function() {
-    $rootScope.$emit.apply($rootScope, arguments);
-  }
-}]);
+  ngServices.factory('$once', ['$rootScope', function($rootScope) {
+    return function(event, callback) {
+      var removeListener1 = angular.noop;
+      var removeListener2 = angular.noop;
+      function once() {
+        removeListener1();
+        removeListener2();
+      }
+      removeListener1 = $rootScope.$on(event, callback);
+      removeListener2 = $rootScope.$on(event, once);
+    }
+  }]);
 
   angular.module('ngEventEmitter', [
     'ngEventEmitter.decorators',
