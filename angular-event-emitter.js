@@ -58,7 +58,7 @@
 
   ngServices.factory('$on', ['$rootScope', function($rootScope) {
     return function(args) {
-      $rootScope.$on.apply($rootScope, arguments);
+      return $rootScope.$on.apply($rootScope, arguments);
     }
   }]);
 
