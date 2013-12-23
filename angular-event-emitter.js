@@ -56,16 +56,11 @@
     }
   }]);
 
-module.directive('ngOn', function() {
-  return {
-    link: function(scope, element, attrs, ngModel) {
-        var toggle = true;
-        scope.$onRootScope('event:'+attrs.ngOn, function(event, callback) {
-          scope[attrs.ngExecute].apply(this, arguments);
-        });
+  ngServices.factory('$on', ['$rootScope', function($rootScope) {
+    return function(args) {
+      $rootScope.$on.apply($rootScope, arguments);
     }
-  };
-});
+  }]);
 
 module.factory('$emit', ['$rootScope', function($rootScope) {
   return function() {
