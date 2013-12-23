@@ -3,25 +3,22 @@
   var ngDirectives = angular.module('ngEventEmitter.directives', []);
   var ngServices = angular.module('ngEventEmitter.services', []);
 
-angular.module('ngEventEmitter', ['angular-event-emitter']);
+  ngDecorators.config(['$provide', function($provide) {
 
-module.config(['$provide', function($provide) {
+    $provide.decorator('$rootScope', ['$delegate', function($delegate) {
+      Object.defineProperty($delegate.constructor.prototype, '$onRootScope', {
+        value: function(name, listener){
+          var unsubscribe = $delegate.$on(name, listener);
+          this.$on('$destroy', unsubscribe);
+        },
+        enumerable: false
+      });
+      return $delegate;
+    }]);
 
-  $provide.decorator('$rootScope', ['$delegate', function($delegate) {
-
-    Object.defineProperty($delegate.constructor.prototype, '$onRootScope', {
-      value: function(name, listener){
-        var unsubscribe = $delegate.$on(name, listener);
-        this.$on('$destroy', unsubscribe);
-      },
-      enumerable: false
-    });
-
-    return $delegate;
   }]);
 
 
-}]);
 
   ngDirectives.directive('ngOn', ['$parse', '$rootScope', function($parse, $rootScope) {
     function linker(scope, element, attrs, ngModel) {
