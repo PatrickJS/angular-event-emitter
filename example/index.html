@@ -2,27 +2,33 @@
 <html>
 <head>
   <title>Example Emit app</title>
+  <style type="text/css">
+
+  </style>
 </head>
 <body ng-app="emitApp">
 
   <div ng-controller="MainController">
-    <div ng-repeat="toggle in toggles">
+    <span ng-repeat="toggle in toggles">
         <input type="button" ng-channel="click:{{ 'channel'+$index }}" ng-emit="$index" value="Toggle {{ toggle }}" />
-    </div>
+    </span>
+    <button ng-click="add(toggles)">Add more</button>
 
-    <div class="div1 slide-left" ng-on="click:{{ 'channel'+$index }}" ng-execute="callback" ng-show="toggle" ng-repeat="toggle in toggles">
+    <span ng-repeat="toggle in toggles"
+          ng-on="click:{{ 'channel'+$index }}"
+          ng-execute="callback"
+          toggle-section>
         <p>This is section #{{ toggle }}</p>
-    </div>
+    </span>
   </div>
 
-
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular-animate.js"></script>
+  <script>Error.stackTraceLimit = Infinity;</script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular-animate.js"></script>
   <script src="../angular-event-emitter.js"></script>
   <script type="text/javascript">
   !function(app, angular) {
   'use strict';
-  Error.stackTraceLimit = Infinity;
 
 
     app.controller('MainController', function($scope, $once, $on, $emit) {
@@ -33,49 +39,32 @@
           console.log('$on', args);
         });
 
+        $scope.add = function(collection) {
+          var lastIndex = collection.length-1;
+          var count = collection[lastIndex];
+          collection.push(count+1);
+        };
+
         $scope.toggle = true;
         $scope.toggles = [1,2,3]; // should be names
     //    $scope.triggerArgs = function() {};
         $scope.callback = function(value) {
           $emit('event', 'trigger event');
-          console.log(arguments);
+          console.log('callback ', arguments);
         };
+    })
+    .directive('toggleSection', function($animate) {
+      return function(scope, element, attrs) {
+        var toggle = true;
+        scope.$onRootScope('event:'+(attrs.ngOn || attrs.toggleSection), function(ev,num) {
+          toggle = !toggle;
+          var toggleClass = (toggle) ? 'removeClass' : 'addClass';
+          $animate[toggleClass](element, 'ng-hide');
+          $animate[toggleClass](element, 'ng-show');
+        });
+      }
     });
 
-    // app.directive('ngChannel', function($rootScope) {
-    //     function linker(scope, element, attrs) {
-    //       var _event = attrs.ngChannel.split(':')[0]
-    //       element.bind(_event, function() {
-    //         // checks if the argument is located on the local scope before converting it into a string
-    //         var arg = (scope.ngEmit !== undefined) ? scope.ngEmit : attrs.ngEmit;
-    //         $rootScope.$emit.call('event:'+attrs.ngChannel, arg);
-    //       });
-    //     }
-    //     return {
-    //         scope: {
-    //             ngEmit: '='
-    //         },
-    //         link: linker
-    //     };
-    // });
-
-
-    // app.directive('ngOn', function($animate, $parse, $rootScope) {
-    //   function linker(scope, element, attrs) {
-    //     var removeListener = $rootScope.$on('event:'+attrs.ngOn, function(event, args) {
-    //       // element.slideToggle();
-    //       var callback = $parse(attrs.ngExecute)(scope);
-    //       callback.apply(this, arguments);
-    //       // scope[attrs.ngExecute].apply(this, arguments);
-    //     });
-
-    //     // remove listener when the scope is destoryed
-    //     scope.$on('$destory', removeListener);
-    //   }
-    //   return {
-    //     link: linker
-    //   };
-    // });
 
   }(angular.module('emitApp', ['ngEventEmitter']), angular);
 
