@@ -4,13 +4,14 @@
   var ngServices = angular.module('ngEventEmitter.services', []);
 
   ngDecorators.config(['$provide', function($provide) {
+    function onRootScope(name, listener){
+      var unsubscribe = $delegate.$on(name, listener);
+      this.$on('$destroy', unsubscribe);
+    }
 
     $provide.decorator('$rootScope', ['$delegate', function($delegate) {
       Object.defineProperty($delegate.constructor.prototype, '$onRootScope', {
-        value: function(name, listener){
-          var unsubscribe = $delegate.$on(name, listener);
-          this.$on('$destroy', unsubscribe);
-        },
+        value: onRootScope,
         enumerable: false
       });
       return $delegate;
@@ -21,14 +22,17 @@
 
   ngDirectives.directive('ngChannel', ['$rootScope', function($rootScope) {
     function linker(scope, element, attrs, ngModel) {
+      /* work in progress $eval method
+      var _event = scope.$eval(attrs.ngChannel);
+      console.log(_event)
+      */
       var _event = attrs.ngChannel.split(':')[0];
-      // var _event = scope.$eval(attrs.ngChannel);
-      // console.log(_event)
       element.bind(_event, function(event) {
         var arg = (scope.ngEmit !== undefined) ? scope.ngEmit : attrs.ngEmit;
         $rootScope.$emit.call($rootScope, 'event:'+attrs.ngChannel, arg);
       });
     }
+
     return {
       scope: {
           ngEmit: '='
@@ -45,6 +49,7 @@
       });
       scope.$on('$destory', removeListener);
     }
+
     return {
       link: linker
     };
