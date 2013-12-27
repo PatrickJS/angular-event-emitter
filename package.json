@@ -1,2 +1,32 @@
 {
+  "name": "angular-event-emitter",
+  "version": "0.0.1",
+  "main": "angular-event-emitter.js",
+  "description": "Event emitters for AngularJS",
+  "homepage": "https://github.com/gdi2290/angular-event-emitter",
+  "bugs": "https://github.com/gdi2290/angular-event-emitter/issues",
+  "author": {
+    "name": "Patrick Stapleton",
+    "email": "github@gdi2290.com",
+    "url": "www.gdi2290.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:gdi2290/angular-event-emitter.git"
+  },
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ],
+  "dependencies": {
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "load-grunt-tasks": "~0.1.0",
+    "time-grunt": "~0.1.0",
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-watch": "~0.5.0"
+  }
 }
