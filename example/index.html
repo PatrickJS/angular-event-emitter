@@ -2,9 +2,7 @@
 <html>
 <head>
   <title>Example Emit app</title>
-  <style type="text/css">
-
-  </style>
+  <link rel="stylesheet" type="text/css" href="http://augus.github.io/ngAnimate/css/ng-animation.css">
 </head>
 <body ng-app="emitApp">
 
@@ -14,7 +12,8 @@
     </span>
     <button ng-click="add(toggles)">Add more</button>
 
-    <span ng-repeat="toggle in toggles"
+    <span class="slide-left"
+          ng-repeat="toggle in toggles"
           ng-on="click:{{ 'channel'+$index }}"
           ng-execute="callback"
           toggle-section>
@@ -27,17 +26,22 @@
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular-animate.js"></script>
   <script src="../angular-event-emitter.js"></script>
   <script type="text/javascript">
+
+
   !function(app, angular) {
   'use strict';
 
 
-    app.controller('MainController', function($scope, $once, $on, $emit) {
+    app.controller('MainController', function($rootScope, $scope, $once, $on, $emit) {
+        function logger(event, args) {
+          console.log('$on', args);
+        }
+
         $once('event', function(event, args) {
           console.log('$once ', args);
         });
-        $on('event', function(event, args) {
-          console.log('$on', args);
-        });
+
+        $on('event', logger);
 
         $scope.add = function(collection) {
           var lastIndex = collection.length-1;
@@ -58,12 +62,14 @@
         var toggle = true;
         scope.$onRootScope('event:'+(attrs.ngOn || attrs.toggleSection), function(ev,num) {
           toggle = !toggle;
-          var toggleClass = (toggle) ? 'removeClass' : 'addClass';
-          $animate[toggleClass](element, 'ng-hide');
-          $animate[toggleClass](element, 'ng-show');
+          var toggleHide = (toggle) ? 'removeClass' : 'addClass';
+          // var toggleShow = (toggle) ? 'addClass' : 'removeClass';
+          $animate[toggleHide](element, 'ng-hide');
+          // $animate[toggleShow](element, 'ng-show');
         });
       }
     });
+
 
 
   }(angular.module('emitApp', ['ngEventEmitter']), angular);
