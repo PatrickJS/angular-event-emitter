@@ -1,2 +1,22 @@
 {
+  "name": "angular-event-emitter",
+  "version": "0.0.1",
+  "homepage": "https://github.com/gdi2290/angular-event-emitter",
+  "authors": [
+    "gdi2290 <github@gdi2290.com>"
+  ],
+  "main": "angular-event-emitter.js",
+  "description": "Event emitters for AngularJS",
+  "ignore": [
+    "**/.*",
+    "*.yml",
+    "*.xml",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "*"
+  }
 }
