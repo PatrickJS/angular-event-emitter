@@ -53,7 +53,7 @@ You can download angular-event-emitter by:
         };
 
         $scope.toggle = true;
-        $scope.toggles = [1,2,3]; // should be names
+        $scope.toggles = [1,2,3];
     //    $scope.triggerArgs = function() {};
         $scope.callback = function(value) {
           $emit('event', 'trigger event');
