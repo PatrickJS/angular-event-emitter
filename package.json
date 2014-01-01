@@ -1,6 +1,6 @@
 {
   "name": "angular-event-emitter",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "angular-event-emitter.js",
   "description": "Event emitters for AngularJS",
   "homepage": "https://github.com/gdi2290/angular-event-emitter",
