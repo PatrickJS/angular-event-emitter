@@ -4,14 +4,17 @@
   var ngServices = angular.module('ngEventEmitter.services', []);
 
   ngDecorators.config(['$provide', function($provide) {
-    function onRootScope(name, listener){
-      var unsubscribe = $delegate.$on(name, listener);
-      this.$on('$destroy', unsubscribe);
+
+    function onRootScope($delegate) {
+      return function(name, listener) {
+        var unsubscribe = $delegate.$on(name, listener);
+        this.$on('$destroy', unsubscribe);
+      };
     }
 
     $provide.decorator('$rootScope', ['$delegate', function($delegate) {
       Object.defineProperty($delegate.constructor.prototype, '$onRootScope', {
-        value: onRootScope,
+        value: onRootScope($delegate),
         enumerable: false
       });
       return $delegate;
@@ -58,13 +61,13 @@
   ngServices.factory('$emit', ['$rootScope', function($rootScope) {
     return function(args) {
       $rootScope.$emit.apply($rootScope, arguments);
-    }
+    };
   }]);
 
   ngServices.factory('$on', ['$rootScope', function($rootScope) {
     return function(args) {
       return $rootScope.$on.apply($rootScope, arguments);
-    }
+    };
   }]);
 
   ngServices.factory('$once', ['$rootScope', function($rootScope) {
@@ -77,7 +80,7 @@
       }
       removeListener1 = $rootScope.$on(event, callback);
       removeListener2 = $rootScope.$on(event, once);
-    }
+    };
   }]);
 
   angular.module('ngEventEmitter', [
