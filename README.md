@@ -31,8 +31,8 @@ You can download angular-event-emitter by:
   </div>
 
 
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular-animate.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.10/angular.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.10/angular-animate.js"></script>
   <script src="bower_components/angular-event-emitter/angular-event-emitter.js"></script>
   <script type="text/javascript">
     angular.module('YOUR_APP', [
