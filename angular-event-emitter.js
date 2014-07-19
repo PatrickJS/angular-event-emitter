@@ -50,7 +50,7 @@
         var callback = $parse(attrs.ngExecute)(scope);
         callback.apply(scope, arguments);
       });
-      scope.$on('$destory', removeListener);
+      scope.$on('$destroy', removeListener);
     }
 
     return {
